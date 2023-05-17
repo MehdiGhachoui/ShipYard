@@ -30,6 +30,15 @@ async function InitMiddelwares() {
     );
 }
 
+async function InitRoutes() {
+    app.get('/api/healthChecker', async (_, res: Response) => {
+        res.status(200).json({
+            status: 'success',
+            message: 'Welcome, we are happy to see you',
+        });
+    });
+}
+
 
 async function InitServer() {
     try {
@@ -43,6 +52,7 @@ async function InitServer() {
 
 async function main() {
     InitMiddelwares()
+    InitRoutes()
     InitServer()
 }
 
