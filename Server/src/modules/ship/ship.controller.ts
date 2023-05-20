@@ -34,7 +34,6 @@ class ShipController {
 
         const reslt = await this.service.editShip({ id: req.params.id, body: req.body })
 
-        console.log(reslt)
         if (reslt) {
             res.status(StatusCodes.OK).json({
                 status: "Success",

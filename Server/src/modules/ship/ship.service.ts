@@ -7,7 +7,7 @@ class ShipService {
     private filePath: string;
 
     constructor() {
-        this.filePath = __dirname + '\\data.json'
+        this.filePath = __dirname + '/data.json'
     }
 
     public getShips = async (): Promise<[IShip]> => {
