@@ -1,12 +1,25 @@
 version: "3"
 services:
-  node-express-docker:
+
+  client:
+    build:
+      context: ./client
+      dockerfile: Dockerfile.dev
+    ports:
+      - 5173:5173
+    volumes:
+      - ./client/src:/client/src
+    container_name: client-dev
+    depends_on:
+      - server
+
+  server:
     env_file:
       - ./server/.env
     build:
       context: ./server
       dockerfile: Dockerfile.dev
-    container_name: node-express-docker
+    container_name: server-dev
     expose:
       - "4000"
     ports:

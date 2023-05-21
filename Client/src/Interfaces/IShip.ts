@@ -1,3 +1,4 @@
+
 export interface IShip {
     Id: string,
     name: string,
@@ -5,3 +6,4 @@ export interface IShip {
     width: number,
     code: string
 }
+

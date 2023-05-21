@@ -1,6 +1,7 @@
 import fs from "fs"
 import { nanoid } from 'nanoid'
 import { CreateShipBody, UpdateShipBody } from "./ship.schema";
+import { IShip } from "./ship.entity";
 
 
 class ShipService {
@@ -10,7 +11,7 @@ class ShipService {
         this.filePath = __dirname + '/data.json'
     }
 
-    public getShips = async (): Promise<[IShip]> => {
+    public getShips = async (): Promise<IShip[]> => {
         const data = await this.readDataFromFile()
         return data;
     }
@@ -55,7 +56,7 @@ class ShipService {
     };
 
 
-    private readDataFromFile = async (): Promise<[IShip]> => {
+    private readDataFromFile = async (): Promise<IShip[]> => {
         const data = await fs.readFileSync(this.filePath, 'utf8');
         return JSON.parse(data);
     }

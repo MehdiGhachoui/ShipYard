@@ -21,16 +21,16 @@ class App {
 
     private InitializeMiddlewares() {
 
+        this.app.use(
+            cors({
+                origin: config.get<string>('origin'),
+            })
+        );
         this.app.use(express.json({ limit: '10kb' }));
 
         if (process.env.NODE_ENV === 'development') this.app.use(morgan('dev'));
 
-        this.app.use(
-            cors({
-                origin: config.get<string>('origin'),
-                credentials: true,
-            })
-        );
+
     }
 
     private InitializeRoutes(routers: IRouter[]) {
