@@ -1,8 +1,19 @@
 import Navbar from "../components/Navbar"
 import ShipSearch from "../components/ships/ShipSearch"
-import { newShip, searchShips } from "../requests/request-ships"
+import { deleteShip, newShip, searchShips, updateShip } from "../requests/request-ships"
 import { IShip } from "../Interfaces/IShip"
 import { toast } from "react-toastify"
+
+
+type ActionData = {
+    name: string,
+    length: number,
+    width: number,
+    code: string,
+    _action: string,
+    shipId: string
+}
+
 
 export async function dashboardLoader() {
     const data = await searchShips("/ship")
@@ -15,24 +26,30 @@ export async function dashboardAction({ request }: { request: Request }) {
 
     const { _action, ...values } = Object.fromEntries(rslt)
 
+    const data = values as unknown as ActionData
 
-    console.log(_action, values)
-    // const data = values as unknown as IShip
+    const ship: Omit<IShip, "Id"> = {
+        name: data.name,
+        length: +data.length,
+        width: +data.width,
+        code: data.code,
+    }
 
-    // const ship: Omit<IShip, "Id"> = {
-    //     name: data.name,
-    //     length: +data.length,
-    //     width: +data.width,
-    //     code: data.code,
-    // }
-    // try {
-    //     newShip({ url: "/ship", data: ship })
-    //     return toast.success("Ship Info has been added with success")
-    // } catch (err) {
-    //     return toast.error("Something went wrong")
-    // }
 
-    return true
+    if (_action == "addShip") {
+        await newShip({ url: "ship", data: ship })
+        return toast.success("Ship Info has been added with success")
+    }
+
+    if (_action == "updateShip") {
+        await updateShip({ url: "ship", id: data.shipId, data: ship })
+        return toast.success("Ship Info has been updated with success")
+    }
+
+    if (_action == "deleteShip") {
+        await deleteShip({ url: "ship", id: data.shipId, })
+        return toast.success("Ship Info has been deleted with success")
+    }
 }
 
 const Dashboard = () => {

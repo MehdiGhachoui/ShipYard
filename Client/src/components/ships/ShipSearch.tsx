@@ -1,3 +1,4 @@
+import { useEffect } from 'react'
 import { ColumnDef } from '@tanstack/react-table';
 import { BsPencil, BsTrash } from 'react-icons/bs';
 import { useMemo, useState } from "react";
@@ -20,7 +21,10 @@ const ShipSearch = () => {
     const [showEditModal, setShowEditModal] = useState(false)
     const [showDeleteModal, setShowDeleteModal] = useState(false)
 
-    const [ship, setShip] = useState<IShip>()
+    const [searchText, setSearchText] = useState("");
+    const [shipId, setShipId] = useState("")
+
+    const [tableData, setTableData] = useState<IShip[]>([]);
 
     const cols = useMemo<ColumnDef<IShip>[]>(() => [
         {
@@ -47,20 +51,40 @@ const ShipSearch = () => {
         {
             header: '',
             cell: (props) => (<div className='flex justify-evenly '>
-                <button onClick={() => { setShowEditModal(true), setShip(ships.find(x => x.Id == props.row.original.Id)) }} className='flex items-center justify-center text-green-600 rounded-2xl border-2 border-green-600 p-2  hover:cursor-pointer shadow-xl'>
+                <button onClick={() => { setShipId(props.row.original.Id), setShowEditModal(true) }} className='flex items-center justify-center text-green-600 rounded-2xl border-2 border-green-600 p-2  hover:cursor-pointer shadow-xl'>
                     <BsPencil />
                 </button>
 
-                <button onClick={() => { setShowDeleteModal(true), setShip(ships.find(x => x.Id == props.row.original.Id)) }} className='flex items-center justify-center text-red-600 rounded-2xl border-2 border-red-600 p-2  hover:cursor-pointer shadow-xl'>
+                <button onClick={() => { setShipId(props.row.original.Id), setShowDeleteModal(true) }} className='flex items-center justify-center text-red-600 rounded-2xl border-2 border-red-600 p-2  hover:cursor-pointer shadow-xl'>
                     <BsTrash />
                 </button>
             </div>
             ),
-            accessorKey: 'id',
+            accessorKey: 'spark',
         },
 
 
     ], [])
+
+
+
+    useEffect(() => {
+        let newData = ships.filter((val) => {
+            if (searchText === "") {
+                return val;
+            }
+            else if (val.name.toLowerCase().includes(searchText.toLowerCase())) {
+                return val;
+            }
+
+            else if (val.code.includes(searchText)) {
+                return val;
+            }
+        })
+
+        setTableData(newData)
+
+    }, [ships, searchText])
 
     return (
         <>
@@ -69,7 +93,7 @@ const ShipSearch = () => {
                 <div className='flex flex-col md:flex-row justify-between pt-4 pb-6 text-center md:text-right'>
                     <form>
                         <input
-                            // onChange={(e) => setSearchText(e.target.value)}
+                            onChange={(e) => setSearchText(e.target.value)}
                             className='w-full border-2 px-4 py-2 rounded-2xl shadow-xl'
                             type='text'
                             placeholder='Search a ship'
@@ -83,13 +107,13 @@ const ShipSearch = () => {
                     </div>
                 </div>
 
-                <Table data={ships} columns={cols} />
+                <Table data={tableData} columns={cols} />
             </div>
 
 
             <ShipAdd showModal={showAddModal} setShowModal={setShowAddModal} />
-            <ShipEdit ship={ship} showModal={showEditModal} setShowModal={setShowEditModal} />
-            <ShipDelete ship={ship} showModal={showDeleteModal} setShowModal={setShowDeleteModal} />
+            <ShipEdit shipId={shipId} showModal={showEditModal} setShowModal={setShowEditModal} />
+            <ShipDelete shipId={shipId} showModal={showDeleteModal} setShowModal={setShowDeleteModal} />
         </>
     )
 }

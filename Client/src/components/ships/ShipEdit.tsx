@@ -1,4 +1,4 @@
-import { useSubmit } from "react-router-dom"
+import { useLoaderData, useSubmit } from "react-router-dom"
 import Modal from "../Modal"
 import { useFormik } from "formik";
 import { shipValidationSchema } from "../../schemas/ship.schema";
@@ -6,7 +6,7 @@ import { useEffect } from "react";
 import { IShip } from "../../Interfaces/IShip";
 
 type Props = {
-    ship: IShip | undefined,
+    shipId: string,
     showModal: boolean,
     setShowModal: React.Dispatch<React.SetStateAction<boolean>>;
 }
@@ -18,7 +18,13 @@ type NewShipData = {
     code: string;
 };
 
-const ShipEdit = ({ ship, showModal, setShowModal }: Props) => {
+type FetchedData = {
+    ships: IShip[]
+}
+
+const ShipEdit = ({ shipId, showModal, setShowModal }: Props) => {
+
+    const { ships } = useLoaderData() as FetchedData
 
     const submit = useSubmit();
 
@@ -32,18 +38,20 @@ const ShipEdit = ({ ship, showModal, setShowModal }: Props) => {
         },
         validationSchema: shipValidationSchema,
         onSubmit: async (values, { resetForm }) => {
-            submit({ ...values, _action: "updateShip", shipId: ship?.Id ?? "" }, { method: "put" });
+            submit({ ...values, _action: "updateShip", shipId: shipId }, { method: "put" });
             resetForm()
             setShowModal(false)
         },
     });
 
     useEffect(() => {
+        let ship = ships.find(x => x.Id == shipId)
         formik.setFieldValue("name", ship?.name)
         formik.setFieldValue("code", ship?.code)
         formik.setFieldValue("length", ship?.length)
         formik.setFieldValue("width", ship?.width)
-    }, [ship])
+
+    }, [shipId])
 
     return (
         <Modal showModal={showModal} header={"Edit Ship"}>

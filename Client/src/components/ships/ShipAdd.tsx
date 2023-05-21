@@ -29,7 +29,7 @@ const ShipAdd = ({ showModal, setShowModal }: Props) => {
         },
         validationSchema: shipValidationSchema,
         onSubmit: async (values, { resetForm }) => {
-            submit(values, { method: "post" });
+            submit({ ...values, _action: "addShip" }, { method: "post" });
             resetForm()
             setShowModal(false)
         },
@@ -80,9 +80,6 @@ const ShipAdd = ({ showModal, setShowModal }: Props) => {
                         Submit
                     </button>
                 </div>
-
-
-                <input type="hidden" name="_action" value="addShip" />
             </form>
         </Modal>
     )

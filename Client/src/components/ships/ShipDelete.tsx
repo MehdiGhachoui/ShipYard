@@ -1,17 +1,16 @@
 import { useSubmit } from "react-router-dom"
 import Modal from "../Modal"
 import { useFormik } from "formik";
-import { IShip } from "../../Interfaces/IShip";
 
 type Props = {
-    ship: IShip | undefined,
+    shipId: string,
     showModal: boolean,
     setShowModal: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 
 
-const ShipDelete = ({ ship, showModal, setShowModal }: Props) => {
+const ShipDelete = ({ shipId, showModal, setShowModal }: Props) => {
 
     const submit = useSubmit();
 
@@ -19,7 +18,8 @@ const ShipDelete = ({ ship, showModal, setShowModal }: Props) => {
         enableReinitialize: true,
         initialValues: {},
         onSubmit: async (values, { resetForm }) => {
-            submit({ ...values, _action: "deleteShip", shipId: ship?.Id ?? "" }, { method: "delete" });
+
+            submit({ ...values, _action: "deleteShip", shipId: shipId }, { method: "delete" });
             resetForm()
             setShowModal(false)
         },
