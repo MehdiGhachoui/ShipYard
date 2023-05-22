@@ -1,7 +1,7 @@
 # React Express CRUD Application
 
 ## Important 
-Please create a `.env` file in both folders and please copy the same values from `.env.example` in each file
+Please create a `.env` file in both folders and please copy the same values from `.env.example` from each file
 
 ## Running the app
 
